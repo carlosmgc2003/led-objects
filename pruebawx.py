@@ -7,7 +7,7 @@ TAM_MATRIZ = 6
 # TODO: tamaño fijo de ventana style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX
 class Ventana(wx.Frame):
     def __init__(self):
-        super().__init__(None, -1, title="Prueba", size=(505, 800))
+        super().__init__(None, -1, title="Prueba", style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX,size=(505, 800))
         self.matrizBox = wx.GridSizer(rows=TAM_MATRIZ, cols=TAM_MATRIZ, hgap=1, vgap=1)
         self.panel = wx.Panel(self)
         self.InitUI()
@@ -17,7 +17,7 @@ class Ventana(wx.Frame):
         #TODO: Mover toda la logica de la matriz al paquete
         self.panel.SetBackgroundColour("gray")
         vbox = wx.BoxSizer(wx.VERTICAL)
-        self.dibujarMatriz("NAHUEL")
+        self.dibujarMatriz("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
         btnCerrar = wx.Button(self.panel, label="Salir")
         btnCerrar.Bind(wx.EVT_BUTTON, self.cerrar)
         vbox.Add(self.matrizBox, wx.ID_ANY, wx.ALL | wx.EXPAND, 20)
