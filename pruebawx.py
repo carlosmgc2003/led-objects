@@ -1,5 +1,6 @@
 import wx
-from Clases import Caracter
+
+from Clases import matriz_led
 
 TAM_MATRIZ = 6
 
@@ -7,32 +8,28 @@ TAM_MATRIZ = 6
 # TODO: tamaño fijo de ventana style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX
 class Ventana(wx.Frame):
     def __init__(self):
-        super().__init__(None, -1, title="Prueba", style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX,size=(505, 800))
-        self.matrizBox = wx.GridSizer(rows=TAM_MATRIZ, cols=TAM_MATRIZ, hgap=1, vgap=1)
+        super().__init__(None, -1, title="Prueba", style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX, size=(505, 800))
         self.panel = wx.Panel(self)
+        self.matrizBox = matriz_led.MatrizLed(padre=self.panel, tam_matriz=TAM_MATRIZ)
+        self.VBoxPrincipal = wx.BoxSizer(wx.VERTICAL)
+        self.Botonera = wx.BoxSizer(wx.HORIZONTAL)
         self.InitUI()
-        self.Centre()
 
     def InitUI(self):
-        #TODO: Mover toda la logica de la matriz al paquete
+        """Metodo que separa la lógica de inicializacion de la UI"""
         self.panel.SetBackgroundColour("gray")
-        vbox = wx.BoxSizer(wx.VERTICAL)
-        self.dibujarMatriz("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+        self.matrizBox.dibujarMatriz("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
         btnCerrar = wx.Button(self.panel, label="Salir")
         btnCerrar.Bind(wx.EVT_BUTTON, self.cerrar)
-        vbox.Add(self.matrizBox, wx.ID_ANY, wx.ALL | wx.EXPAND, 20)
-        vbox.Add(btnCerrar, wx.ID_ANY, wx.ALIGN_CENTER, border=5)
-        self.panel.SetSizer(vbox)
+        self.VBoxPrincipal.Add(self.matrizBox, wx.ID_ANY, wx.ALL | wx.EXPAND, 20)
+        self.Botonera.Add(btnCerrar, wx.ID_ANY, wx.EXPAND, border=10)
+        self.VBoxPrincipal.Add(self.Botonera, wx.ID_ANY, wx.EXPAND)
+        self.panel.SetSizer(self.VBoxPrincipal)
+        self.Centre()
 
+    # noinspection PyUnusedLocal
     def cerrar(self, event):
         self.Close()
-
-    def dibujarMatriz(self, texto: str):
-        texto = texto.ljust(TAM_MATRIZ * TAM_MATRIZ)
-        for row in range(TAM_MATRIZ):
-            for col in range(TAM_MATRIZ):
-                caracter = Caracter.Caracter(self.panel, texto[col + (row * TAM_MATRIZ)])
-                self.matrizBox.Add(caracter, wx.EXPAND)
 
 
 def main():
