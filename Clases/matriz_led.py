@@ -9,25 +9,30 @@ class MatrizLed(wx.GridSizer):
         super().__init__(rows=tam_matriz, cols=tam_matriz, hgap=1, vgap=1)
         self.TAM_MATRIZ = tam_matriz
         self.padre = padre
+        self.caracteres = []
         if texto_inicial != '':
-            self.dibujarMatriz(texto_inicial)
+            self.inicializarMatriz(texto_inicial)
         else:
             self.texto = ''
 
-    def dibujarMatriz(self, texto: str):
+    def inicializarMatriz(self, texto: str):
         """Recibe un texto, lo guarda en el objeto y lo muestra en la matriz."""
-        self.Clear(delete_windows=True)
         self.texto = texto
         texto = texto.ljust(self.TAM_MATRIZ * self.TAM_MATRIZ)
         for row in range(self.TAM_MATRIZ):
             for col in range(self.TAM_MATRIZ):
                 elem = caracter_led.Caracter(self.padre, texto[col + (row * self.TAM_MATRIZ)].upper())
+                self.caracteres.append(elem)
                 self.Add(elem, wx.EXPAND)
 
     def blanquearMatriz(self):
         """Cuando se invoca muestra la matriz en blanco"""
-        self.Clear(delete_windows=True)
-        for row in range(self.TAM_MATRIZ):
-            for col in range(self.TAM_MATRIZ):
-                elem = caracter_led.Caracter(self.padre, " ")
-                self.Add(elem, wx.EXPAND)
+        for caracter in self.caracteres:
+            caracter.ApagarCaracter()
+
+    def dibujarMatriz(self, texto: str):
+        """Repinta los LED para mostrar el caracter"""
+        self.texto = texto
+        texto = texto.ljust(self.TAM_MATRIZ * self.TAM_MATRIZ)
+        for caracter, item in zip(self.caracteres, texto):
+            caracter.DibujarCaracter(item)
