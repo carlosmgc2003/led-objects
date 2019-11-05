@@ -6,7 +6,7 @@ class Caracter(wx.Panel):
     al estilo pantalla de LED que se puede redibujar"""
 
     def __init__(self, padre=wx.Frame, caracter: str = ' ', lado: int = 7,
-                 color_letra: str = 'blue', color_fondo: str = 'black'):
+                 color_letra: str = 'green', color_fondo: str = 'black'):
         super().__init__(padre)
         self.caracter = caracter  # Letra que se desea mostrar
         self.lado = lado  # Cantidad de cuadraditos de lado
