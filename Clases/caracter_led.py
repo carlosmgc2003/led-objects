@@ -6,7 +6,7 @@ class Caracter(wx.Panel):
     al estilo pantalla de LED que se puede redibujar"""
 
     def __init__(self, padre=wx.Frame, caracter: str = ' ', lado: int = 7,
-                 color_letra: str = 'green', color_fondo: str = 'black'):
+                 color_letra: wx.Colour = wx.GREEN, color_fondo: wx.Colour = wx.BLACK):
         super().__init__(padre)
         self.caracter = caracter  # Letra que se desea mostrar
         self.lado = lado  # Cantidad de cuadraditos de lado
@@ -20,27 +20,34 @@ class Caracter(wx.Panel):
         en un bonito arreglo de frames de colores, solo para
         inicializar! no usar para redibujar!"""
         grilla = wx.GridSizer(rows=self.lado, cols=self.lado, hgap=1, vgap=1)
-
         for _ in range(self.lado ** 2):
-            self.paneles.append(wx.Panel(self, id=wx.ID_ANY, size=wx.Size(10, 10)))
-
-        for value, panel in zip(self.ValoresLED(self.caracter), self.paneles):
-            if value == 1:
-                panel.SetBackgroundColour(self.color_letra)
-            else:
-                panel.SetBackgroundColour(self.color_fondo)
-            grilla.Add(panel, 0, wx.EXPAND)
+            nuevoPanel = wx.Panel(self, size=wx.Size(10, 10))
+            self.paneles.append(nuevoPanel)
+            grilla.Add(nuevoPanel, 0, wx.EXPAND)
+        self.DibujarCaracter(self.caracter)
         self.SetSizer(grilla)
+
+    def CambiarColorFondo(self, color : wx.Colour):
+        """Cambia el color de fondo guardado en el caracter y lo refresca"""
+        self.color_fondo = color
+        self.DibujarCaracter(self.estado)
+
+    def CambiarColorLetra(self, color: wx.Colour):
+        """Cambia el color de letra guardado en el caracter y lo refresca"""
+        self.color_letra = color
+        self.DibujarCaracter(self.estado)
 
     def ApagarCaracter(self):
         """Metodo que coloca a todos los paneles integrantes del
         caracter del color de fondo."""
+        self.estado = None
         for led in self.paneles:
             led.SetBackgroundColour(self.color_fondo)
             led.Refresh()
 
     def DibujarCaracter(self, caracter: str):
         """Repinta los paneles con un caracter determinado"""
+        self.estado = caracter
         for value, led in zip(self.ValoresLED(caracter), self.paneles):
             if value == 1:
                 led.SetBackgroundColour(self.color_letra)
@@ -51,7 +58,6 @@ class Caracter(wx.Panel):
     def ValoresLED(self, caracter: str) -> list:
         """Devuelve una lista ceros y unos para cada caracter pre cargado,
         en caso de error devuelve !!!"""
-
         try:
             valores = {
                 ' ': [0, 0, 0, 0, 0, 0, 0,
@@ -319,6 +325,13 @@ class Caracter(wx.Panel):
                       0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0,
                       0, 0, 0, 1, 1, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, ],
+                'Ñ': [0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 1, 1, 1, 0, 0,
+                      0, 1, 0, 0, 0, 1, 0,
+                      0, 1, 1, 0, 0, 1, 0,
+                      0, 1, 0, 1, 0, 1, 0,
+                      0, 1, 0, 0, 1, 1, 0,
                       0, 0, 0, 0, 0, 0, 0, ],
             }
             return valores[caracter]

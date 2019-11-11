@@ -36,3 +36,9 @@ class MatrizLed(wx.GridSizer):
         texto = texto.ljust(self.TAM_MATRIZ * self.TAM_MATRIZ)
         for caracter, item in zip(self.caracteres, texto):
             caracter.DibujarCaracter(item)
+
+    def repintarMatriz(self, colorFondo : wx.Colour, colorLetra : wx.Colour):
+        """Envia el wx.Colour como mensaje a los carateres"""
+        for caracter in self.caracteres:
+            caracter.CambiarColorFondo(colorFondo)
+            caracter.CambiarColorLetra(colorLetra)
