@@ -13,7 +13,8 @@ class Ventana(wx.Frame):
         self.matrizBox = matriz_led.MatrizLed(padre=self.panel, tam_matriz=TAM_MATRIZ)
         self.VBoxPrincipal = wx.BoxSizer(wx.VERTICAL)
         self.Botonera = wx.BoxSizer(wx.HORIZONTAL)
-        self.entradaTexto = wx.TextCtrl(self.panel,value="Ingrese su texto aquí",  style=wx.TE_CENTRE)
+        self.entradaTexto = wx.TextCtrl(self.panel,  style=wx.TE_CENTRE)
+        self.entradaTexto.SetMaxLength(36)
         self.temporizador = wx.Timer()
         self.mostrarHora = False
         self.InitUI()
@@ -36,18 +37,25 @@ class Ventana(wx.Frame):
         self.btnTextoPers.Bind(wx.EVT_BUTTON, self.dibujar_de_caja)
         self.entradaTexto.Bind(wx.EVT_TEXT, self.dibujar_de_caja)
 
+        self.btnAbrirArch = wx.Button(self.panel, label="Abrir Archivo")
+        self.btnAbrirArch.Bind(wx.EVT_BUTTON, self.abrirarchivo)
+
         self.btnHora = wx.Button(self.panel, label="Hora")
         self.btnHora.Bind(wx.EVT_BUTTON, self.hora)
         self.temporizador.Bind(wx.EVT_TIMER, self.actualizarhora)
 
+
         self.VBoxPrincipal.Add(self.matrizBox, wx.ID_ANY, wx.ALL | wx.EXPAND, 20)
-        self.VBoxPrincipal.Add(self.entradaTexto, wx.ID_ANY, wx.CENTER | wx.EXPAND)
-        self.VBoxPrincipal.Add(self.btnTextoPers, wx.ID_ANY, wx.EXPAND, border=5)
-        self.VBoxPrincipal.Add(self.btnHora, wx.ID_ANY, wx.EXPAND, border=5)
+        self.VBoxMenu = wx.BoxSizer(wx.VERTICAL)
+        self.VBoxMenu.Add(self.entradaTexto, wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
+        self.VBoxMenu.Add(self.btnTextoPers, wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
+        self.VBoxMenu.Add(self.btnAbrirArch, wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
+        self.VBoxMenu.Add(self.btnHora, wx.ID_ANY,  wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
         self.Botonera.Add(btnCerrar, wx.ID_ANY, wx.EXPAND, border=5)
         self.Botonera.Add(btnBlanquear, wx.ID_ANY, wx.EXPAND, border=5)
         self.Botonera.Add(btnDemo, wx.ID_ANY, wx.EXPAND, border=5)
-        self.VBoxPrincipal.Add(self.Botonera, wx.ID_ANY, wx.EXPAND)
+        self.VBoxPrincipal.Add(self.VBoxMenu, wx.ID_ANY, wx.EXPAND)
+        self.VBoxPrincipal.Add(self.Botonera, wx.ID_ANY,  wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
         self.panel.SetSizer(self.VBoxPrincipal)
         self.Centre()
 
@@ -58,6 +66,7 @@ class Ventana(wx.Frame):
     # noinspection PyUnusedLocal
     def blanquear(self, event):
         self.matrizBox.blanquearMatriz()
+        self.entradaTexto.Clear()
 
     # noinspection PyUnusedLocal
     def demo(self, event):
@@ -81,12 +90,14 @@ class Ventana(wx.Frame):
             self.btnHora.SetLabel("Parar")
             self.entradaTexto.Disable()
             self.btnTextoPers.Disable()
+            self.btnAbrirArch.Disable()
             self.temporizador.Start(milliseconds=500)
         else:
             self.mostrarHora = False
             self.btnHora.SetLabel("Hora")
             self.entradaTexto.Enable()
             self.btnTextoPers.Enable()
+            self.btnAbrirArch.Enable()
             self.temporizador.Stop()
 
     def actualizarhora(self, event):
@@ -97,6 +108,24 @@ class Ventana(wx.Frame):
         else:
             self.matrizBox.dibujarMatriz('{:02d} {:02d} {:02d}'.format(dt.hour, dt.minute, dt.second))
 
+    def abrirarchivo(self, event):
+        """Muestra la caja de abrir archivo y al seleccionar uno valido lo muestra en la matriz"""
+        with wx.FileDialog(self, "Abrir archivo de texto", wildcard="Archivos txt (*.txt)|*.txt",
+                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
+            # Si el usuario cambia de idea
+            if fileDialog.ShowModal() == wx.ID_CANCEL:
+                return
+
+            # Proceder a cargar el archivo seleccionado por el usuario
+            pathname = fileDialog.GetPath()
+            try:
+                with open(pathname, 'r') as file:
+                    texto = file.readline()
+                    self.matrizBox.dibujarMatriz(texto[:36].upper())
+                    self.entradaTexto.Clear()
+                    self.entradaTexto.SetValue(texto[:36].upper())
+            except IOError:
+                wx.MessageBox(f"No se puede abrir el archivo {fileDialog.GetFilename()}.")
 
 
 
