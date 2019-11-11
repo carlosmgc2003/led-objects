@@ -8,7 +8,7 @@ TAM_MATRIZ = 6
 # TODO: tamaño fijo de ventana style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX
 class Ventana(wx.Frame):
     def __init__(self):
-        super().__init__(None, -1, title="Prueba", style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX, size=(505, 800))
+        super().__init__(None, -1, title="Led Objects", style= wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX, size=(505, 800))
         self.panel = wx.Panel(self)
         # Solo la matriz y los Sizers quedan sueltos como atributos de clase
         self.matrizBox = matriz_led.MatrizLed(padre=self.panel, tam_matriz=TAM_MATRIZ)
