@@ -13,6 +13,7 @@ class Caracter(wx.Panel):
         self.color_fondo = color_fondo  # Color de fondo, de los buit-in en wxpython
         self.color_letra = color_letra  # Color de letra, de los buit-in en wxpython
         self.paneles = []  # Lista que guarda las referencias a los paneles de colores
+        self.estado = None
         self.InitUI()
 
     def InitUI(self):
@@ -27,7 +28,7 @@ class Caracter(wx.Panel):
         self.DibujarCaracter(self.caracter)
         self.SetSizer(grilla)
 
-    def CambiarColorFondo(self, color : wx.Colour):
+    def CambiarColorFondo(self, color: wx.Colour):
         """Cambia el color de fondo guardado en el caracter y lo refresca"""
         self.color_fondo = color
         self.DibujarCaracter(self.estado)
@@ -55,7 +56,8 @@ class Caracter(wx.Panel):
                 led.SetBackgroundColour(self.color_fondo)
             led.Refresh()
 
-    def ValoresLED(self, caracter: str) -> list:
+    @staticmethod
+    def ValoresLED(caracter: str) -> list:
         """Devuelve una lista ceros y unos para cada caracter pre cargado,
         en caso de error devuelve !!!"""
         try:
