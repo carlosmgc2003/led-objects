@@ -15,3 +15,9 @@ cartel de LED. Sin mas preambulos:
 3. Mostrar la pantalla de forma titilante, con el texto establecido. La velocidad default tiene que se alguna que logre leer el texto.
 4. Poder configurar la velocidad que titila. No importa la magnitud, sino mostrar algunos casos con velocidad diferentes.
 5. Obtener la hora actual y mostrarla en la pantalla de led. Solo HH:MM y sin actualizar.
+
+#### Instalación
+1. git clone https://github.com/carlosmgc2003/led-objects.git
+2. cd led-objects
+3. pip install -r requirements.txt
+4. python main.py
