@@ -19,5 +19,5 @@ cartel de LED. Sin mas preambulos:
 #### Instalación
 1. `git clone https://github.com/carlosmgc2003/led-objects.git`
 2. `cd led-objects`
-3. `pip install -r requirements.txt`
+3. `pip install -r requirement.txt`
 4. `python main.py`
