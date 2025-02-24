@@ -35,9 +35,9 @@ class Ventana(wx.Frame):
                         'btnAbrirArch': wx.Button(self.panel, label="Abrir Archivo"),
                         'btnHora': wx.Button(self.panel, label="Hora"),
                         'etiquetaClrFondo': wx.StaticText(self.panel, label="Color de Fondo",
-                                                          style=wx.ALIGN_CENTRE_HORIZONTAL),
+                                                        style=wx.ALIGN_CENTRE_HORIZONTAL),
                         'etiquetaClrLetra': wx.StaticText(self.panel, label="Color de Letra",
-                                                          style=wx.ALIGN_CENTRE_HORIZONTAL),
+                                                        style=wx.ALIGN_CENTRE_HORIZONTAL),
                         'clrFondo': wx.ColourPickerCtrl(self.panel, colour=wx.BLACK),
                         'clrLetra': wx.ColourPickerCtrl(self.panel, colour=wx.GREEN),
                         'choTitilar': wx.Choice(self.panel, choices=['Ninguna', 'Lenta', 'Rápida'])}
@@ -58,23 +58,34 @@ class Ventana(wx.Frame):
         self.widgets['clrLetra'].Bind(wx.EVT_COLOURPICKER_CHANGED, self.cambiarColor)
 
         # Todos los Add a los sizers para armar la ventana.
-        self.VBoxPrincipal.Add(self.matrizBox, wx.ID_ANY, wx.ALL | wx.EXPAND, 20)
-        self.HBoxColor.Add(self.widgets['etiquetaClrFondo'], wx.ID_ANY, wx.ALL | wx.EXPAND, 10)
-        self.HBoxColor.Add(self.widgets['clrFondo'], wx.ID_ANY, wx.EXPAND)
-        self.HBoxColor.Add(self.widgets['etiquetaClrLetra'], wx.ID_ANY, wx.ALL | wx.EXPAND, 10)
-        self.HBoxColor.Add(self.widgets['clrLetra'], wx.ID_ANY, wx.EXPAND)
-        self.VBoxMenu.Add(self.widgets['entradaTexto'], wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.VBoxMenu.Add(self.widgets['btnTextoPers'], wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.VBoxMenu.Add(self.widgets['btnAbrirArch'], wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.VBoxMenu.Add(self.widgets['btnHora'], wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.VBoxMenu.Add(self.HBoxColor, wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.VBoxMenu.Add(self.widgets['choTitilar'], wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.Botonera.Add(self.widgets['btnCerrar'], wx.ID_ANY, wx.EXPAND, border=5)
-        self.Botonera.Add(self.widgets['btnBlanquear'], wx.ID_ANY, wx.EXPAND, border=5)
-        self.Botonera.Add(self.widgets['btnDemo'], wx.ID_ANY, wx.EXPAND, border=5)
-        self.VBoxPrincipal.Add(self.VBoxMenu, wx.ID_ANY, wx.EXPAND)
-        self.VBoxPrincipal.Add(self.Botonera, wx.ID_ANY, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
+        self.VBoxPrincipal.Add(self.matrizBox, 0, wx.ALL | wx.EXPAND, 20)
+        
+        # HBoxColor - Color picker section
+        self.HBoxColor.Add(self.widgets['etiquetaClrFondo'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.HBoxColor.Add(self.widgets['clrFondo'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.HBoxColor.Add(self.widgets['etiquetaClrLetra'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.HBoxColor.Add(self.widgets['clrLetra'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        
+        # VBoxMenu - Menu section
+        self.VBoxMenu.Add(self.widgets['entradaTexto'], 0, wx.ALL | wx.EXPAND, 5)
+        self.VBoxMenu.Add(self.widgets['btnTextoPers'], 0, wx.ALL | wx.EXPAND, 5)
+        self.VBoxMenu.Add(self.widgets['btnAbrirArch'], 0, wx.ALL | wx.EXPAND, 5)
+        self.VBoxMenu.Add(self.widgets['btnHora'], 0, wx.ALL | wx.EXPAND, 5)
+        self.VBoxMenu.Add(self.HBoxColor, 0, wx.ALL | wx.EXPAND, 5)
+        self.VBoxMenu.Add(self.widgets['choTitilar'], 0, wx.ALL | wx.EXPAND, 5)
+        
+        # Botonera - Bottom buttons
+        self.Botonera.Add(self.widgets['btnCerrar'], 1, wx.ALL | wx.EXPAND, 5)
+        self.Botonera.Add(self.widgets['btnBlanquear'], 1, wx.ALL | wx.EXPAND, 5)
+        self.Botonera.Add(self.widgets['btnDemo'], 1, wx.ALL | wx.EXPAND, 5)
+        
+        # Adding the sections to the main vertical box with proper proportion
+        self.VBoxPrincipal.Add(self.VBoxMenu, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
+        self.VBoxPrincipal.Add(self.Botonera, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 20)
+        
+        # Final layout
         self.panel.SetSizer(self.VBoxPrincipal)
+        self.VBoxPrincipal.Fit(self)
         self.Centre()
 
     # noinspection PyUnusedLocal

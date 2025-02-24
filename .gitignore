@@ -1,3 +1,4 @@
 #Archivos que quedan fuera del repo.
 /venv
 /.idea
+__pycache__

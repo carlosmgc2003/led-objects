@@ -1,0 +1,4 @@
+numpy==2.2.2
+pathlib2==2.3.7.post1
+six==1.17.0
+wxPython==4.2.2
