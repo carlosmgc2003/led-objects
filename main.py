@@ -13,174 +13,177 @@ class Ventana(wx.Frame):
                          size=(505, 800))
         self.panel = wx.Panel(self)
         # Solo la matriz y los Sizers quedan sueltos como atributos de clase
-        self.matrizBox = matriz_led.MatrizLed(padre=self.panel, tam_matriz=TAM_MATRIZ)
-        self.VBoxPrincipal = wx.BoxSizer(wx.VERTICAL)
-        self.Botonera = wx.BoxSizer(wx.HORIZONTAL)
-        self.VBoxMenu = wx.BoxSizer(wx.VERTICAL)
-        self.HBoxColor = wx.BoxSizer(wx.HORIZONTAL)
-        self.mostrarHora = False
-        self.InitUI()
+        self.matriz_box = matriz_led.MatrizLed(padre=self.panel, tam_matriz=TAM_MATRIZ)
+        self.v_box_principal = wx.BoxSizer(wx.VERTICAL)
+        self.botonera = wx.BoxSizer(wx.HORIZONTAL)
+        self.v_box_menu = wx.BoxSizer(wx.VERTICAL)
+        self.h_box_color = wx.BoxSizer(wx.HORIZONTAL)
+        self.mostrar_hora = False
+        self._init_ui()
 
-    def InitUI(self):
+    def _init_ui(self):
         """Metodo que separa la lógica de inicializacion de la UI"""
-        self.matrizBox.inicializarMatriz(' ')
+        self.matriz_box.inicializar_matriz(' ')
         # Todos los widgets como botones, cajas y color picker van en este diccionario
-        self.widgets = {'entradaTexto': wx.TextCtrl(self.panel, style=wx.TE_CENTRE),
+        self.widgets = {'entrada_texto': wx.TextCtrl(self.panel, style=wx.TE_CENTRE),
                         'temporizador': wx.Timer(),
-                        'tempTitilar': wx.Timer(),
-                        'btnCerrar': wx.Button(self.panel, label="Salir"),
-                        'btnBlanquear': wx.Button(self.panel, label="Blanquear"),
-                        'btnDemo': wx.Button(self.panel, label="Demo"),
-                        'btnTextoPers': wx.Button(self.panel, label="Mostrar"),
-                        'btnAbrirArch': wx.Button(self.panel, label="Abrir Archivo"),
-                        'btnHora': wx.Button(self.panel, label="Hora"),
-                        'etiquetaClrFondo': wx.StaticText(self.panel, label="Color de Fondo",
-                                                        style=wx.ALIGN_CENTRE_HORIZONTAL),
-                        'etiquetaClrLetra': wx.StaticText(self.panel, label="Color de Letra",
-                                                        style=wx.ALIGN_CENTRE_HORIZONTAL),
-                        'clrFondo': wx.ColourPickerCtrl(self.panel, colour=wx.BLACK),
-                        'clrLetra': wx.ColourPickerCtrl(self.panel, colour=wx.GREEN),
-                        'choTitilar': wx.Choice(self.panel, choices=['Ninguna', 'Lenta', 'Rápida'])}
+                        'temp_titilar': wx.Timer(),
+                        'btn_cerrar': wx.Button(self.panel, label="Salir"),
+                        'btn_blanquear': wx.Button(self.panel, label="Blanquear"),
+                        'btn_demo': wx.Button(self.panel, label="Demo"),
+                        'btn_texto_pers': wx.Button(self.panel, label="Mostrar"),
+                        'btn_abrir_arch': wx.Button(self.panel, label="Abrir Archivo"),
+                        'btn_hora': wx.Button(self.panel, label="Hora"),
+                        'etiqueta_clr_fondo': wx.StaticText(self.panel, label="Color de Fondo",
+                                                            style=wx.ALIGN_CENTRE_HORIZONTAL),
+                        'etiqueta_clr_letra': wx.StaticText(self.panel, label="Color de Letra",
+                                                            style=wx.ALIGN_CENTRE_HORIZONTAL),
+                        'clr_fondo': wx.ColourPickerCtrl(self.panel, colour=wx.BLACK),
+                        'clr_letra': wx.ColourPickerCtrl(self.panel, colour=wx.GREEN),
+                        'cho_titilar': wx.Choice(self.panel, choices=['Ninguna', 'Lenta', 'Rápida'])}
 
         # Todos los bind de eventos
-        self.widgets['entradaTexto'].SetMaxLength(36)
-        self.widgets['entradaTexto'].Bind(wx.EVT_TEXT, self.dibujar_de_caja)
-        self.widgets['btnCerrar'].Bind(wx.EVT_BUTTON, self.cerrar)
-        self.widgets['btnBlanquear'].Bind(wx.EVT_BUTTON, self.blanquear)
-        self.widgets['btnDemo'].Bind(wx.EVT_BUTTON, self.demo)
-        self.widgets['btnTextoPers'].Bind(wx.EVT_BUTTON, self.dibujar_de_caja)
-        self.widgets['btnAbrirArch'].Bind(wx.EVT_BUTTON, self.abrirarchivo)
-        self.widgets['btnHora'].Bind(wx.EVT_BUTTON, self.hora)
-        self.widgets['temporizador'].Bind(wx.EVT_TIMER, self.actualizarhora)
-        self.widgets['tempTitilar'].Bind(wx.EVT_TIMER, self.titilar)
-        self.widgets['choTitilar'].Bind(wx.EVT_CHOICE, self.iniciar_titilar)
-        self.widgets['clrFondo'].Bind(wx.EVT_COLOURPICKER_CHANGED, self.cambiarColor)
-        self.widgets['clrLetra'].Bind(wx.EVT_COLOURPICKER_CHANGED, self.cambiarColor)
+        self.widgets['entrada_texto'].SetMaxLength(36)
+        self.widgets['entrada_texto'].Bind(wx.EVT_TEXT, self.dibujar_de_caja)
+        self.widgets['btn_cerrar'].Bind(wx.EVT_BUTTON, self.cerrar)
+        self.widgets['btn_blanquear'].Bind(wx.EVT_BUTTON, self.blanquear)
+        self.widgets['btn_demo'].Bind(wx.EVT_BUTTON, self.demo)
+        self.widgets['btn_texto_pers'].Bind(wx.EVT_BUTTON, self.dibujar_de_caja)
+        self.widgets['btn_abrir_arch'].Bind(wx.EVT_BUTTON, self.abrir_archivo)
+        self.widgets['btn_hora'].Bind(wx.EVT_BUTTON, self.hora)
+        self.widgets['temporizador'].Bind(wx.EVT_TIMER, self.actualizar_hora)
+        self.widgets['temp_titilar'].Bind(wx.EVT_TIMER, self.titilar)
+        self.widgets['cho_titilar'].Bind(wx.EVT_CHOICE, self.iniciar_titilar)
+        self.widgets['clr_fondo'].Bind(wx.EVT_COLOURPICKER_CHANGED, self.cambiar_color)
+        self.widgets['clr_letra'].Bind(wx.EVT_COLOURPICKER_CHANGED, self.cambiar_color)
 
         # Todos los Add a los sizers para armar la ventana.
-        self.VBoxPrincipal.Add(self.matrizBox, 0, wx.ALL | wx.EXPAND, 20)
-        
-        # HBoxColor - Color picker section
-        self.HBoxColor.Add(self.widgets['etiquetaClrFondo'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        self.HBoxColor.Add(self.widgets['clrFondo'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        self.HBoxColor.Add(self.widgets['etiquetaClrLetra'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        self.HBoxColor.Add(self.widgets['clrLetra'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-        
-        # VBoxMenu - Menu section
-        self.VBoxMenu.Add(self.widgets['entradaTexto'], 0, wx.ALL | wx.EXPAND, 5)
-        self.VBoxMenu.Add(self.widgets['btnTextoPers'], 0, wx.ALL | wx.EXPAND, 5)
-        self.VBoxMenu.Add(self.widgets['btnAbrirArch'], 0, wx.ALL | wx.EXPAND, 5)
-        self.VBoxMenu.Add(self.widgets['btnHora'], 0, wx.ALL | wx.EXPAND, 5)
-        self.VBoxMenu.Add(self.HBoxColor, 0, wx.ALL | wx.EXPAND, 5)
-        self.VBoxMenu.Add(self.widgets['choTitilar'], 0, wx.ALL | wx.EXPAND, 5)
-        
-        # Botonera - Bottom buttons
-        self.Botonera.Add(self.widgets['btnCerrar'], 1, wx.ALL | wx.EXPAND, 5)
-        self.Botonera.Add(self.widgets['btnBlanquear'], 1, wx.ALL | wx.EXPAND, 5)
-        self.Botonera.Add(self.widgets['btnDemo'], 1, wx.ALL | wx.EXPAND, 5)
-        
-        # Adding the sections to the main vertical box with proper proportion
-        self.VBoxPrincipal.Add(self.VBoxMenu, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
-        self.VBoxPrincipal.Add(self.Botonera, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 20)
-        
+        self.v_box_principal.Add(self.matriz_box, 0, wx.ALL | wx.EXPAND, 20)
+
+        # h_box_color - Color picker section
+        self.h_box_color.Add(self.widgets['etiqueta_clr_fondo'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.h_box_color.Add(self.widgets['clr_fondo'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.h_box_color.Add(self.widgets['etiqueta_clr_letra'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.h_box_color.Add(self.widgets['clr_letra'], 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        # v_box_menu - Menu section
+        self.v_box_menu.Add(self.widgets['entrada_texto'], 0, wx.ALL | wx.EXPAND, 5)
+        self.v_box_menu.Add(self.widgets['btn_texto_pers'], 0, wx.ALL | wx.EXPAND, 5)
+        self.v_box_menu.Add(self.widgets['btn_abrir_arch'], 0, wx.ALL | wx.EXPAND, 5)
+        self.v_box_menu.Add(self.widgets['btn_hora'], 0, wx.ALL | wx.EXPAND, 5)
+        self.v_box_menu.Add(self.h_box_color, 0, wx.ALL | wx.EXPAND, 5)
+        self.v_box_menu.Add(self.widgets['cho_titilar'], 0, wx.ALL | wx.EXPAND, 5)
+
+        # botonera - Bottom buttons
+        self.botonera.Add(self.widgets['btn_cerrar'], 1, wx.ALL | wx.EXPAND, 5)
+        self.botonera.Add(self.widgets['btn_blanquear'], 1, wx.ALL | wx.EXPAND, 5)
+        self.botonera.Add(self.widgets['btn_demo'], 1, wx.ALL | wx.EXPAND, 5)
+
+        # Adding the sections to the main vertical box
+        self.v_box_principal.Add(self.v_box_menu, 0, wx.LEFT | wx.RIGHT | wx.EXPAND, 20)
+        self.v_box_principal.Add(self.botonera, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM | wx.EXPAND, 20)
+
         # Final layout
-        self.panel.SetSizer(self.VBoxPrincipal)
-        self.VBoxPrincipal.Fit(self)
+        self.panel.SetSizer(self.v_box_principal)
+        self.v_box_principal.Fit(self)
         self.Centre()
 
     # noinspection PyUnusedLocal
     def cerrar(self, event):
-        """al ser llamado cierra la ventana principal"""
+        """Al ser llamado cierra la ventana principal"""
         self.Close()
 
     # noinspection PyUnusedLocal
     def blanquear(self, event):
-        """limpiar la matriz y la caja de texto de cualquier contenido"""
-        self.matrizBox.blanquearMatriz()
-        self.widgets['entradaTexto'].Clear()
+        """Limpia la matriz y la caja de texto de cualquier contenido"""
+        self.matriz_box.blanquear_matriz()
+        self.widgets['entrada_texto'].Clear()
 
     # noinspection PyUnusedLocal
     def demo(self, event):
         """Dibuja un monton de bellos caracteres en pantalla para mostrar
-         la matriz de LED en su esplendor"""
-        self.matrizBox.dibujarMatriz("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+        la matriz de LED en su esplendor"""
+        self.matriz_box.dibujar_matriz("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 
     # noinspection PyUnusedLocal
     def dibujar_de_caja(self, event):
         """Toma el valor de la caja de texto y lo muestra letra a letra
         en la matriz de led"""
-        self.matrizBox.dibujarMatriz(self.widgets['entradaTexto'].GetValue().upper())
+        self.matriz_box.dibujar_matriz(self.widgets['entrada_texto'].GetValue().upper())
 
     # noinspection PyUnusedLocal
     def hora(self, event):
-        """Muestra la hora de manera actual en la matriz de LED, y alterna su permanencia"""
+        """Muestra la hora actual en la matriz de LED, y alterna su permanencia"""
         dt = datetime.now()
-        self.matrizBox.dibujarMatriz('{:02d}:{:02d}:{:02d}'.format(dt.hour, dt.minute, dt.second))
-        if not self.mostrarHora:
-            self.mostrarHora = True
-            # Una utilidad del diccionario, aplicar polimorfismo en widgets
-            deshabilitar = ['entradaTexto', 'btnTextoPers', 'btnAbrirArch']
+        self.matriz_box.dibujar_matriz('{:02d}:{:02d}:{:02d}'.format(dt.hour, dt.minute, dt.second))
+        if not self.mostrar_hora:
+            self.mostrar_hora = True
+            # Una utilidad del diccionario: aplicar polimorfismo en widgets
+            deshabilitar = ['entrada_texto', 'btn_texto_pers', 'btn_abrir_arch']
             for clave in deshabilitar:
                 self.widgets[clave].Disable()
-            self.widgets['btnHora'].SetLabel("Parar")
+            self.widgets['btn_hora'].SetLabel("Parar")
             self.widgets['temporizador'].Start(milliseconds=500)
         else:
-            self.mostrarHora = False
-            self.widgets['btnHora'].SetLabel("Hora")
-            habilitar = ['entradaTexto', 'btnTextoPers', 'btnAbrirArch']
+            self.mostrar_hora = False
+            self.widgets['btn_hora'].SetLabel("Hora")
+            habilitar = ['entrada_texto', 'btn_texto_pers', 'btn_abrir_arch']
             for clave in habilitar:
                 self.widgets[clave].Enable()
             self.widgets['temporizador'].Stop()
 
-    def actualizarhora(self, event):
+    def actualizar_hora(self, event):
         """Actualiza la hora con el evento timer y alterna la aparicion de los : de segundos"""
         dt = datetime.now()
         if dt.second % 2 == 0:
-            self.matrizBox.dibujarMatriz('{:02d}:{:02d}:{:02d}'.format(dt.hour, dt.minute, dt.second))
+            self.matriz_box.dibujar_matriz('{:02d}:{:02d}:{:02d}'.format(dt.hour, dt.minute, dt.second))
         else:
-            self.matrizBox.dibujarMatriz('{:02d} {:02d} {:02d}'.format(dt.hour, dt.minute, dt.second))
+            self.matriz_box.dibujar_matriz('{:02d} {:02d} {:02d}'.format(dt.hour, dt.minute, dt.second))
 
-    def abrirarchivo(self, event):
+    # noinspection PyUnusedLocal
+    def abrir_archivo(self, event):
         """Muestra la caja de abrir archivo y al seleccionar uno valido lo muestra en la matriz"""
         with wx.FileDialog(self, "Abrir archivo de texto", wildcard="Archivos txt (*.txt)|*.txt",
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
+                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as file_dialog:
             # Si el usuario cambia de idea
-            if fileDialog.ShowModal() == wx.ID_CANCEL:
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
                 return
 
             # Proceder a cargar el archivo seleccionado por el usuario
-            pathname = fileDialog.GetPath()
+            pathname = file_dialog.GetPath()
             try:
                 with open(pathname, 'r') as file:
                     texto = file.readline()
-                    self.matrizBox.dibujarMatriz(texto[:36].upper())
-                    self.widgets['entradaTexto'].Clear()
-                    self.widgets['entradaTexto'].SetValue(texto[:36].upper())
+                    self.matriz_box.dibujar_matriz(texto[:36].upper())
+                    self.widgets['entrada_texto'].Clear()
+                    self.widgets['entrada_texto'].SetValue(texto[:36].upper())
             except IOError:
-                wx.MessageBox(f"No se puede abrir el archivo {fileDialog.GetFilename()}.")
+                wx.MessageBox(f"No se puede abrir el archivo {file_dialog.GetFilename()}.")
 
-    def cambiarColor(self, event):
-        self.matrizBox.repintarMatriz(self.widgets['clrFondo'].GetColour(), self.widgets['clrLetra'].GetColour())
+    def cambiar_color(self, event):
+        """Actualiza los colores de fondo y letra de la matriz con los valores del color picker"""
+        self.matriz_box.repintar_matriz(self.widgets['clr_fondo'].GetColour(),
+                                        self.widgets['clr_letra'].GetColour())
 
     def iniciar_titilar(self, event):
         """Cuando se dispara el EVT_CHOICE al seleccionar una opción de la caja se inicia
-        o detiene el tempTitilar"""
-        valorChoice = self.widgets['choTitilar'].GetString(self.widgets['choTitilar'].GetSelection())
-        if valorChoice == 'Lenta':
-            self.widgets['tempTitilar'].Start(milliseconds=250)
-        elif valorChoice == 'Rápida':
-            self.widgets['tempTitilar'].Start(milliseconds=125)
+        o detiene el temp_titilar"""
+        valor_choice = self.widgets['cho_titilar'].GetString(self.widgets['cho_titilar'].GetSelection())
+        if valor_choice == 'Lenta':
+            self.widgets['temp_titilar'].Start(milliseconds=250)
+        elif valor_choice == 'Rápida':
+            self.widgets['temp_titilar'].Start(milliseconds=125)
         else:
-            self.widgets['tempTitilar'].Stop()
+            self.widgets['temp_titilar'].Stop()
 
     def titilar(self, event):
-        """metodo que apaga o enciende alternativamente la matriz de acuerdo a lo seleccionado
+        """Metodo que apaga o enciende alternativamente la matriz de acuerdo a lo seleccionado
         en el choice titilar"""
-        textoAct = self.matrizBox.obtenerContenido()
-        if self.matrizBox.obtenerEstado():
-            self.matrizBox.blanquearMatriz()
+        texto_act = self.matriz_box.obtener_contenido()
+        if self.matriz_box.obtener_estado():
+            self.matriz_box.blanquear_matriz()
         else:
-            self.matrizBox.dibujarMatriz(textoAct)
+            self.matriz_box.dibujar_matriz(texto_act)
 
 
 def main():
